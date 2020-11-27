@@ -1,5 +1,7 @@
 # alis
 
+curl -sL https://bit.ly/38XBg4f | bash
+
 Arch Linux Install Script (or alis) installs unattended, automated and customized Arch Linux system.
 
 It is a simple bash script that fully automates the installation of a Arch Linux system after booting from the original Arch Linux installation media. It contains the same commands that you would type and execute one by one interactively to complete the installation. The only user intervention needed is to edit a configuration file to choose the installation options and preferences from partitioning, to encryption, bootloader, file system, language and keyboard mapping, desktop environment, kernels, packages to install and graphic drivers. This automation makes the installation easy and fast.
