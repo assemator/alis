@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-# Arch Linux Install Script (alis) installs unattended, automated
-# and customized Arch Linux system.
+# Arch_Linux-x86_64 Install Script (alis) installs unattended, automated
+# and customized Arch_Linux-x86_64 system.
 # Copyright (C) 2020 picodotdev
 
 # This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,8 @@ set -e
 # If you test it in real hardware please send me an email to pico.dev@gmail.com with
 # the machine description and tell me if somethig goes wrong or all works fine.
 #
-# Please, don't ask for support for this script in Arch Linux forums, first read
-# the Arch Linux wiki [1], the Installation Guide [2] and the General
+# Please, don't ask for support for this script in Arch_Linux-x86_64 forums, first read
+# the Arch_Linux-x86_64 wiki [1], the Installation Guide [2] and the General
 # Recomendations [3], later compare the commands with those of this script.
 #
 # [1] https://wiki.archlinux.org
@@ -225,7 +225,7 @@ function check_variables_size() {
 }
 
 function warning() {
-    echo -e "${LIGHT_BLUE}Welcome to Arch Linux Install Script${NC}"
+    echo -e "${LIGHT_BLUE}Welcome to Arch_Linux-x86_64 Install Script${NC}"
     echo ""
     echo -e "${RED}Warning"'!'"${NC}"
     echo -e "${RED}This script deletes all partitions of the persistent${NC}"
@@ -430,8 +430,8 @@ function partition() {
 
     # setup
     if [ "$PARTITION_MODE" == "auto" ]; then
-        PARTITION_PARTED_UEFI="mklabel gpt mkpart ESP fat32 1MiB 512MiB mkpart root $FILE_SYSTEM_TYPE 512MiB 100% set 1 esp on"
-        PARTITION_PARTED_BIOS="mklabel msdos mkpart primary ext4 4MiB 512MiB mkpart primary $FILE_SYSTEM_TYPE 512MiB 100% set 1 boot on"
+        PARTITION_PARTED_UEFI="mklabel gpt mkpart ESP fat32 1MiB 512MiB mkpart root $FILE_SYSTEM_TYPE 512MiB 50% set 1 esp on"
+        PARTITION_PARTED_BIOS="mklabel msdos mkpart primary ext4 4MiB 512MiB mkpart primary $FILE_SYSTEM_TYPE 512MiB 50% set 1 boot on"
 
         if [ "$BIOS_TYPE" == "uefi" ]; then
             if [ "$DEVICE_SATA" == "true" ]; then
@@ -631,7 +631,7 @@ function install() {
     sed -i 's/#Color/Color/' /etc/pacman.conf
     sed -i 's/#TotalDownload/TotalDownload/' /etc/pacman.conf
 
-    pacstrap /mnt base base-devel linux linux-firmware
+    pacstrap /mnt base base-devel linux-zen linux-firmware
 
     sed -i 's/#Color/Color/' /mnt/etc/pacman.conf
     sed -i 's/#TotalDownload/TotalDownload/' /mnt/etc/pacman.conf
@@ -880,7 +880,7 @@ function display_driver() {
 function kernels() {
     print_step "kernels()"
 
-    pacman_install "linux-headers"
+    pacman_install "linux-zen-headers"
     if [ -n "$KERNELS" ]; then
         pacman_install "$KERNELS"
     fi
@@ -1121,7 +1121,7 @@ function bootloader_refind() {
 
     cat <<EOT >> "/mnt$ESP_DIRECTORY/EFI/refind/refind.conf"
 # alis
-menuentry "Arch Linux" {
+menuentry "Arch_Linux-x86_64" {
     volume   $PARTUUID_BOOT
     loader   /vmlinuz-linux
     initrd   /initramfs-linux.img
@@ -1138,7 +1138,7 @@ menuentry "Arch Linux" {
 EOT
     if [[ $KERNELS =~ .*linux-lts.* ]]; then
         cat <<EOT >> "/mnt$ESP_DIRECTORY/EFI/refind/refind.conf"
-menuentry "Arch Linux (lts)" {
+menuentry "Arch_Linux-x86_64 (LTS)" {
     volume   $PARTUUID_BOOT
     loader   /vmlinuz-linux-lts
     initrd   /initramfs-linux-lts.img
@@ -1156,7 +1156,7 @@ EOT
     fi
     if [[ $KERNELS =~ .*linux-hardened.* ]]; then
         cat <<EOT >> "/mnt$ESP_DIRECTORY/EFI/refind/refind.conf"
-menuentry "Arch Linux (hardened)" {
+menuentry "Arch_Linux-x86_64 (hardened)" {
     volume   $PARTUUID_BOOT
     loader   /vmlinuz-linux-hardened
     initrd   /initramfs-linux-hardened.img
@@ -1174,7 +1174,7 @@ EOT
     fi
     if [[ $KERNELS =~ .*linux-zen.* ]]; then
         cat <<EOT >> "/mnt$ESP_DIRECTORY/EFI/refind/refind.conf"
-menuentry "Arch Linux (zen)" {
+menuentry "Arch_Linux-x86_64 (zen)" {
     volume   $PARTUUID_BOOT
     loader   /vmlinuz-linux-zen
     initrd   /initramfs-linux-zen.img
@@ -1240,7 +1240,7 @@ EOT
        SYSTEMD_OPTIONS="luks.name=$UUID_ROOT=$LUKS_DEVICE_NAME luks.options=discard"
     fi
 
-    echo "title Arch Linux" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"
+    echo "title Arch_Linux-x86_64" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"
     echo "efi /vmlinuz-linux" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"
     if [ -n "$SYSTEMD_MICROCODE" ]; then
         echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"
@@ -1248,7 +1248,7 @@ EOT
     echo "initrd /initramfs-linux.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"
     echo "options initrd=initramfs-linux.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"
 
-    echo "title Arch Linux (terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-terminal.conf"
+    echo "title Arch_Linux-x86_64 (terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-terminal.conf"
     echo "efi /vmlinuz-linux" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-terminal.conf"
     if [ -n "$SYSTEMD_MICROCODE" ]; then
         echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-terminal.conf"
@@ -1256,7 +1256,7 @@ EOT
     echo "initrd /initramfs-linux.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-terminal.conf"
     echo "options initrd=initramfs-linux.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX systemd.unit=multi-user.target $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-terminal.conf"
 
-    echo "title Arch Linux (fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-fallback.conf"
+    echo "title Arch_Linux-x86_64 (fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-fallback.conf"
     echo "efi /vmlinuz-linux" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-fallback.conf"
     if [ -n "$SYSTEMD_MICROCODE" ]; then
         echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-fallback.conf"
@@ -1265,7 +1265,7 @@ EOT
     echo "options initrd=initramfs-linux-fallback.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-fallback.conf"
 
     if [[ $KERNELS =~ .*linux-lts.* ]]; then
-        echo "title Arch Linux (lts)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts.conf"
+        echo "title Arch_Linux-x86_64 (LTS)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts.conf"
         echo "efi /vmlinuz-linux-lts" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts.conf"
@@ -1273,7 +1273,7 @@ EOT
         echo "initrd /initramfs-linux-lts.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts.conf"
         echo "options initrd=initramfs-linux-lts.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts.conf"
 
-        echo "title Arch Linux (lts, terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-terminal.conf"
+        echo "title Arch_Linux-x86_64 (lts, terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-terminal.conf"
         echo "efi /vmlinuz-linux-lts" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-terminal.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-terminal.conf"
@@ -1281,7 +1281,7 @@ EOT
         echo "initrd /initramfs-linux-lts.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-terminal.conf"
         echo "options initrd=initramfs-linux-lts.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX systemd.unit=multi-user.target $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-terminal.conf"
 
-        echo "title Arch Linux (lts-fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-fallback.conf"
+        echo "title Arch_Linux-x86_64 (lts-fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-fallback.conf"
         echo "efi /vmlinuz-linux-lts" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-fallback.conf"
         if [ "$CPU_INTEL" == "true" -a "$VIRTUALBOX" != "true" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-lts-fallback.conf"
@@ -1291,7 +1291,7 @@ EOT
     fi
 
     if [[ $KERNELS =~ .*linux-hardened.* ]]; then
-        echo "title Arch Linux (hardened)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened.conf"
+        echo "title Arch_Linux-x86_64 (hardened)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened.conf"
         echo "efi /vmlinuz-linux-hardened" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened.conf"
@@ -1299,7 +1299,7 @@ EOT
         echo "initrd /initramfs-linux-hardened.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened.conf"
         echo "options initrd=initramfs-linux-hardened.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened.conf"
 
-        echo "title Arch Linux (hardened, terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-terminal.conf"
+        echo "title Arch_Linux-x86_64 (hardened, terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-terminal.conf"
         echo "efi /vmlinuz-linux-hardened" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-terminal.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-terminal.conf"
@@ -1307,7 +1307,7 @@ EOT
         echo "initrd /initramfs-linux-hardened.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-terminal.conf"
         echo "options initrd=initramfs-linux-hardened.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX systemd.unit=multi-user.target $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-terminal.conf"
 
-        echo "title Arch Linux (hardened-fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-fallback.conf"
+        echo "title Arch_Linux-x86_64 (hardened-fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-fallback.conf"
         echo "efi /vmlinuz-linux-hardened" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-fallback.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-hardened-fallback.conf"
@@ -1317,7 +1317,7 @@ EOT
     fi
 
     if [[ $KERNELS =~ .*linux-zen.* ]]; then
-        echo "title Arch Linux (zen)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen.conf"
+        echo "title Arch_Linux-x86_64 (zen)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen.conf"
         echo "efi /vmlinuz-linux-zen" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen.conf"
@@ -1325,7 +1325,7 @@ EOT
         echo "initrd /initramfs-linux-zen.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen.conf"
         echo "options initrd=initramfs-linux-zen.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen.conf"
 
-        echo "title Arch Linux (zen, terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-terminal.conf"
+        echo "title Arch_Linux-x86_64 (zen, terminal)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-terminal.conf"
         echo "efi /vmlinuz-linux-zen" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-terminal.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-terminal.conf"
@@ -1333,7 +1333,7 @@ EOT
         echo "initrd /initramfs-linux-zen.img" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-terminal.conf"
         echo "options initrd=initramfs-linux-zen.img $CMDLINE_LINUX_ROOT rw $CMDLINE_LINUX systemd.unit=multi-user.target $SYSTEMD_OPTIONS" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-terminal.conf"
 
-        echo "title Arch Linux (zen-fallback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-fallback.conf"
+        echo "title Arch_Linux-x86_64 (zen-allback)" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-fallback.conf"
         echo "efi /vmlinuz-linux-zen" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-fallback.conf"
         if [ -n "$SYSTEMD_MICROCODE" ]; then
             echo "initrd $SYSTEMD_MICROCODE" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux-zen-fallback.conf"
@@ -1527,7 +1527,7 @@ function terminate() {
 function end() {
     if [ "$REBOOT" == "true" ]; then
         echo ""
-        echo -e "${GREEN}Arch Linux installed successfully"'!'"${NC}"
+        echo -e "${GREEN}Arch_Linux-x86_64 installed successfully"'!'"${NC}"
         echo ""
 
         REBOOT="true"
@@ -1558,7 +1558,7 @@ function end() {
         fi
     else
         echo ""
-        echo -e "${GREEN}Arch Linux installed successfully"'!'"${NC}"
+        echo -e "${GREEN}Arch_Linux-x86_64 installed successfully"'!'"${NC}"
         if [ "$ASCIINEMA" == "false" ]; then
             echo ""
             echo "You will must do a explicit reboot (./alis-reboot.sh)."
