@@ -1428,7 +1428,7 @@ function desktop_environment_gnome() {
 }
 
 function desktop_environment_kde() {
-    pacman_install "plasma-meta plasma-wayland-session kde-applications-meta"
+    pacman_install "kde-accessibility-meta kde-graphics-meta kde-multimedia-meta kde-network-meta kde-system-meta kde-utilities-meta dolphin-plugins"
     arch-chroot /mnt systemctl enable sddm.service
 }
 
